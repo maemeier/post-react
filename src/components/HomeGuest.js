@@ -7,9 +7,9 @@ function HomeGuest() {
     event.preventDefault();
     try {
       await Axios.post("http://localhost:8081/register", {
-        username: "test",
-        email: "test@test.com",
-        password: "1345676545656"
+        username: "test1",
+        email: "test1@test.com",
+        password: "karate310327"
       });
       console.log("User was successfully created.");
     } catch (e) {
