@@ -1,6 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HeaderLoggin = props => {
+  const handleLoggedout = () => {
+    props.setLoggin(false);
+    localStorage.removeItem("postToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("avatar");
+  };
   return (
     <div>
       <div className="flex-row my-3 my-md-0">
@@ -14,16 +21,13 @@ const HeaderLoggin = props => {
         <a href="#" className="mr-2">
           <img
             className="small-header-avatar"
-            src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"
+            src={localStorage.getItem("avatar")}
           />
         </a>
-        <a className="btn btn-sm btn-success mr-2" href="/create-post">
+        <Link className="btn btn-sm btn-success mr-2" to="/create-post">
           Create Post
-        </a>
-        <button
-          onClick={() => props.setLoggin(false)}
-          className="btn btn-sm btn-secondary"
-        >
+        </Link>
+        <button onClick={handleLoggedout} className="btn btn-sm btn-secondary">
           Sign Out
         </button>
       </div>

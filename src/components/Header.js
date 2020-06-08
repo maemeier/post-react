@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 import HeaderLogout from "./HeaderLogout";
 import HeaderLoggin from "./HeaderLoggin";
 
-function Header() {
-  const [loggin, setLoggin] = useState();
-  const [logout, setLogout] = useState();
-
+function Header(props) {
   return (
     <div>
       <header className="header-bar bg-primary mb-3">
@@ -16,10 +13,10 @@ function Header() {
               POSTNISTA
             </Link>
           </h4>
-          {loggin ? (
-            <HeaderLoggin setLoggin={setLoggin} />
+          {props.loggin ? (
+            <HeaderLoggin setLoggin={props.setLoggin} />
           ) : (
-            <HeaderLogout setLoggin={setLoggin} />
+            <HeaderLogout setLoggin={props.setLoggin} />
           )}
         </div>
       </header>

@@ -6,7 +6,7 @@ function HomeGuest() {
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      await Axios.post("http://localhost:8081/register", {
+      await Axios.post("/register", {
         username: "test1",
         email: "test1@test.com",
         password: "karate310327"

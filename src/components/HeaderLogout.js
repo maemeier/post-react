@@ -10,10 +10,14 @@ function HeaderLogout(props) {
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      const response = await Axios.post("http://localhost:8081/login", {
+      const response = await Axios.post("/login", {
         username,
         password
       });
+      // save data
+      localStorage.setItem("postToken", response.data.token);
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("avatar", response.data.avatar);
       props.setLoggin(true);
     } catch (error) {
       console.log("there was an error");
