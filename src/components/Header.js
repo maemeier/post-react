@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import HeaderLogout from "./HeaderLogout";
 import HeaderLoggin from "./HeaderLoggin";
+import StateContext from "../StateContext";
 
 function Header(props) {
+  const appState = useContext(StateContext);
   return (
     <div>
       <header className="header-bar bg-primary mb-3">
@@ -13,7 +15,7 @@ function Header(props) {
               POSTNISTA
             </Link>
           </h4>
-          {props.loggin ? <HeaderLoggin /> : <HeaderLogout />}
+          {appState.loggin ? <HeaderLoggin /> : <HeaderLogout />}
         </div>
       </header>
     </div>

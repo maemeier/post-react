@@ -10,9 +10,9 @@ import About from "./components/About.js";
 import Home from "./components/Home.js";
 import CreatePost from "./components/CreatePost.js";
 import ViewPost from "./components/SinglePost.js";
-import FlashMessage from "./components/FlashMessage.js";
-import Sample from "./Sample.js";
-
+import StateContext from "./StateContext.js";
+import DispatchContext from "./DispatchContext.js";
+import FlashMessage from "./components/FlashMessage";
 import "./App.css";
 import Axios from "axios";
 Axios.defaults.baseURL = "http://localhost:8081";
@@ -38,38 +38,33 @@ function App() {
   const [state, dispatch] = useReducer(ourReducer, initialState);
   //dispatch
 
-  const [loggin, setLoggin] = useState(
-    Boolean(localStorage.getItem("postToken"))
-  );
-  const [flashMessage, setFlashMessage] = useState([]);
-  const addFlashMessage = message => {
-    setFlashMessage(prev => prev.concat(message));
-  };
   return (
-    <Sample.Provider value={{ addFlashMessage, setLoggin }}>
-      <BrowserRouter>
-        <FlashMessage messages={flashMessage} />
-        <Header loggin={loggin} />
-        <Switch>
-          <Route path="/" exact>
-            {loggin ? <Home /> : <HomeGuest />}
-          </Route>
-          <Route path="/create-post">
-            <CreatePost />
-          </Route>
-          <Route path="/post/:id">
-            <ViewPost />
-          </Route>
-          <Route path="/term" exact>
-            <Term />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-        </Switch>
-        <Footer />
-      </BrowserRouter>
-    </Sample.Provider>
+    <StateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        <BrowserRouter>
+          <FlashMessage messages={state.flashMessage} />
+          <Header />
+          <Switch>
+            <Route path="/" exact>
+              {state.loggin ? <Home /> : <HomeGuest />}
+            </Route>
+            <Route path="/create-post">
+              <CreatePost />
+            </Route>
+            <Route path="/post/:id">
+              <ViewPost />
+            </Route>
+            <Route path="/term" exact>
+              <Term />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+          </Switch>
+          <Footer />
+        </BrowserRouter>
+      </DispatchContext.Provider>
+    </StateContext.Provider>
   );
 }
 
