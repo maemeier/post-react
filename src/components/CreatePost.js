@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Page from "./Page";
 import Axios from "axios";
+import { withRouter } from "react-router-dom";
+import Sample from "../Sample.js";
 
-const CreatePost = () => {
+const CreatePost = props => {
   const [title, setTitle] = useState();
   const [body, setBody] = useState();
-  const [city, setCity] = useState();
+  const { addFlashMessage } = useContext(Sample);
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      await Axios.post(
-        "/create-post",
-        {
-          title,
-          body,
-          city,
-          token: localStorage.getItem("postToken")
-        },
-        console.log("post was created")
-      );
+      const response = await Axios.post("/create-post", {
+        title,
+        body,
+        token: localStorage.getItem("postToken")
+      });
+      addFlashMessage("Yippy, your post was created!!");
+      props.history.push(`/post/${response.data}`);
     } catch (err) {
       console.log("there was an error");
     }
@@ -43,22 +43,6 @@ const CreatePost = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="post-title" className="text-muted mb-1">
-            <small>city</small>
-          </label>
-          <input
-            autoFocus
-            name="city"
-            id="post-city"
-            className="form-control form-control-lg form-control-title"
-            type="text"
-            placeholder=""
-            autoComplete="off"
-            onChange={event => setCity(event.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
           <label htmlFor="post-body" className="text-muted mb-1 d-block">
             <small>Body Content</small>
           </label>
@@ -77,4 +61,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default withRouter(CreatePost);

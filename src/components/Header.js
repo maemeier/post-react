@@ -13,11 +13,7 @@ function Header(props) {
               POSTNISTA
             </Link>
           </h4>
-          {props.loggin ? (
-            <HeaderLoggin setLoggin={props.setLoggin} />
-          ) : (
-            <HeaderLogout setLoggin={props.setLoggin} />
-          )}
+          {props.loggin ? <HeaderLoggin /> : <HeaderLogout />}
         </div>
       </header>
     </div>

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import Sample from "../Sample.js";
 
 const HeaderLoggin = props => {
+  const { setLoggin } = useContext(Sample);
   const handleLoggedout = () => {
-    props.setLoggin(false);
+    setLoggin(false);
     localStorage.removeItem("postToken");
     localStorage.removeItem("username");
     localStorage.removeItem("avatar");
