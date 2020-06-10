@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { useImmerReducer } from "use-immer";
 
 import Header from "./components/Header.js";
 import HomeGuest from "./components/HomeGuest.js";
@@ -20,22 +21,27 @@ Axios.defaults.baseURL = "http://localhost:8081";
 function App() {
   const initialState = {
     loggin: Boolean(localStorage.getItem("postToken")),
-    flashMessage: []
-  };
-  const ourReducer = (state, action) => {
-    switch (action.type) {
-      case "loggin":
-        return { loggin: true, flashMessage: state.flashMessage };
-      case "logout":
-        return { loggin: false, flashMessage: state.flashMessage };
-      case "flashMessage":
-        return {
-          loggin: state.loggin,
-          flashMessage: state.flashMessage.concat(action.value)
-        };
+    flashMessage: [],
+    user: {
+      token: localStorage.getItem("postToken"),
+      username: localStorage.getItem("username"),
+      avatar: localStorage.getItem("avatar")
     }
   };
-  const [state, dispatch] = useReducer(ourReducer, initialState);
+  const ourReducer = (draft, action) => {
+    switch (action.type) {
+      case "loggin":
+        draft.loggin = true;
+        return;
+      case "logout":
+        draft.loggin = false;
+        return;
+      case "flashMessage":
+        draft.flashMessage.push(action.value);
+        return;
+    }
+  };
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
   //dispatch
 
   return (
