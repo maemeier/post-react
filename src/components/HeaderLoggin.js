@@ -1,15 +1,14 @@
 import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import DispatchContext from "../DispatchContext.js";
+import StateContext from "../StateContext";
 
 const HeaderLoggin = props => {
   const appDispatch = useContext(DispatchContext);
+  const appState = useContext(StateContext);
 
   const handleLoggedout = () => {
     appDispatch({ type: "logout" });
-    localStorage.removeItem("postToken");
-    localStorage.removeItem("username");
-    localStorage.removeItem("avatar");
   };
   return (
     <div>
@@ -21,12 +20,9 @@ const HeaderLoggin = props => {
           <i className="fas fa-comment"></i>
           <span className="chat-count-badge text-white"> </span>
         </span>
-        <a href="#" className="mr-2">
-          <img
-            className="small-header-avatar"
-            src={localStorage.getItem("avatar")}
-          />
-        </a>
+        <Link to={`/profile/${appState.user.username}`} className="mr-2">
+          <img className="small-header-avatar" src={appState.user.avatar} />
+        </Link>
         <Link className="btn btn-sm btn-success mr-2" to="/create-post">
           Create Post
         </Link>

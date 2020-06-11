@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { useImmerReducer } from "use-immer";
@@ -10,10 +10,11 @@ import Term from "./components/Term.js";
 import About from "./components/About.js";
 import Home from "./components/Home.js";
 import CreatePost from "./components/CreatePost.js";
-import ViewPost from "./components/SinglePost.js";
+import ViewSinglePost from "./components/ViewSinglePost.js";
 import StateContext from "./StateContext.js";
 import DispatchContext from "./DispatchContext.js";
 import FlashMessage from "./components/FlashMessage";
+import Profile from "./components/Profile";
 import "./App.css";
 import Axios from "axios";
 Axios.defaults.baseURL = "http://localhost:8081";
@@ -32,6 +33,7 @@ function App() {
     switch (action.type) {
       case "loggin":
         draft.loggin = true;
+        draft.user = action.data;
         return;
       case "logout":
         draft.loggin = false;
@@ -41,7 +43,20 @@ function App() {
         return;
     }
   };
+  // save data to localStorage
   const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+
+  useEffect(() => {
+    if (state.loggin) {
+      localStorage.setItem("postToken", state.user.token);
+      localStorage.setItem("username", state.user.username);
+      localStorage.setItem("avatar", state.user.avatar);
+    } else {
+      localStorage.removeItem("postToken");
+      localStorage.removeItem("username");
+      localStorage.removeItem("avatar");
+    }
+  }, [state.loggin]);
   //dispatch
 
   return (
@@ -58,13 +73,16 @@ function App() {
               <CreatePost />
             </Route>
             <Route path="/post/:id">
-              <ViewPost />
+              <ViewSinglePost />
             </Route>
             <Route path="/term" exact>
               <Term />
             </Route>
             <Route path="/about">
               <About />
+            </Route>
+            <Route path="/profile/:username">
+              <Profile />
             </Route>
           </Switch>
           <Footer />

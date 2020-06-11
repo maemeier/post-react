@@ -2,12 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import Axios from "axios";
 import DispatchContext from "../DispatchContext";
 
-const { logout, setLogout } = useEffect;
-
 function HeaderLogout(props) {
+  const appDispatch = useContext(DispatchContext);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
-  const appDispatch = useContext(DispatchContext);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -16,11 +14,11 @@ function HeaderLogout(props) {
         username,
         password
       });
-      // save data
-      localStorage.setItem("postToken", response.data.token);
-      localStorage.setItem("username", response.data.username);
-      localStorage.setItem("avatar", response.data.avatar);
-      appDispatch({ type: "loggin" });
+      if (response.data) {
+        appDispatch({ type: "loggin", data: response.data });
+      } else {
+        console.log("incorrect username or password");
+      }
     } catch (error) {
       console.log("there was an error");
     }
