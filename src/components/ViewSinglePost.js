@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Page from "./Page";
+import Loading from "./Loading";
 import { useParams, Link } from "react-router-dom";
 import Axios from "axios";
 
@@ -9,22 +10,28 @@ function ViewSinglePost() {
   const [post, setPost] = useState();
 
   useEffect(() => {
+    const ourRequest = Axios.CancelToken.source();
     async function fetchPost() {
       try {
-        const response = await Axios.get(`/post/${id}`);
+        const response = await Axios.get(`/post/${id}`, {
+          cancelToken: ourRequest.token
+        });
         setPost(response.data);
         setIsLoading(false);
       } catch (e) {
-        console.log("There was a problem.");
+        console.log("There was a problem or the resquest was cancelled");
       }
     }
     fetchPost();
+    return () => {
+      ourRequest.cancel();
+    };
   }, []);
 
   if (isLoading)
     return (
       <Page title="...">
-        <div>Loading...</div>
+        <Loading />
       </Page>
     );
 
@@ -47,10 +54,14 @@ function ViewSinglePost() {
       </div>
 
       <p className="text-muted small mb-4">
-        <Link to={`/profile/${post.author}`}>
+        <Link to={`/profile/${post.author.username}`}>
           <img className="avatar-tiny" src={post.author.avatar} />
         </Link>
-        Posted by <Link to="x">{post.author.username}</Link> on {dateFormatted}
+        Posted by{" "}
+        <Link to={`/profile/${post.author.username}`}>
+          {post.author.username}
+        </Link>{" "}
+        on {dateFormatted}
       </p>
 
       <div className="body-content">{post.body}</div>
